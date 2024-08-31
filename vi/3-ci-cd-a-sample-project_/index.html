@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="vi" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.133.0">
+    <meta name="description" content="">
+<meta name="author" content="journeyoftheaverageguy@gmail.com">
+
+    <link rel="icon" href="../../images/favicon.png" type="image/png">
+
+    <title>Thiết lập CI/CD cho project :: Xây dựng và triển khai ứng dụng tự động</title>
+
+    
+    <link href="../../css/nucleus.css?1725111350" rel="stylesheet">
+    <link href="../../css/fontawesome-all.min.css?1725111350" rel="stylesheet">
+    <link href="../../css/hybrid.css?1725111350" rel="stylesheet">
+    <link href="../../css/featherlight.min.css?1725111350" rel="stylesheet">
+    <link href="../../css/perfect-scrollbar.min.css?1725111350" rel="stylesheet">
+    <link href="../../css/auto-complete.css?1725111350" rel="stylesheet">
+    <link href="../../css/atom-one-dark-reasonable.css?1725111350" rel="stylesheet">
+    <link href="../../css/theme.css?1725111350" rel="stylesheet">
+    <link href="../../css/hugo-theme.css?1725111350" rel="stylesheet">
+    
+    <link href="../../css/theme-workshop.css?1725111350" rel="stylesheet">
+    
+    
+
+    <script src="../../js/jquery-3.3.1.min.js?1725111350"></script>
+
+    <style>
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+  </head>
+  <body class="" data-url="../../vi/3-ci-cd-a-sample-project_/">
+    <nav id="sidebar" class="showVisitedLinks">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="../../">
+
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="30%"><defs><style>.cls-1{fill:#fff;}.cls-2{fill:#f90;fill-rule:evenodd;}</style></defs><title>AWS-Logo_White-Color</title><path class="cls-1" d="M14.09,10.85a4.7,4.7,0,0,0,.19,1.48,7.73,7.73,0,0,0,.54,1.19.77.77,0,0,1,.12.38.64.64,0,0,1-.32.49l-1,.7a.83.83,0,0,1-.44.15.69.69,0,0,1-.49-.23,3.8,3.8,0,0,1-.6-.77q-.25-.42-.51-1a6.14,6.14,0,0,1-4.89,2.3,4.54,4.54,0,0,1-3.32-1.19,4.27,4.27,0,0,1-1.22-3.2A4.28,4.28,0,0,1,3.61,7.75,6.06,6.06,0,0,1,7.69,6.46a12.47,12.47,0,0,1,1.76.13q.92.13,1.91.36V5.73a3.65,3.65,0,0,0-.79-2.66A3.81,3.81,0,0,0,7.86,2.3a7.71,7.71,0,0,0-1.79.22,12.78,12.78,0,0,0-1.79.57,4.55,4.55,0,0,1-.58.22l-.26,0q-.35,0-.35-.52V2a1.09,1.09,0,0,1,.12-.58,1.2,1.2,0,0,1,.47-.35A10.88,10.88,0,0,1,5.77.32,10.19,10.19,0,0,1,8.36,0a6,6,0,0,1,4.35,1.35,5.49,5.49,0,0,1,1.38,4.09ZM7.34,13.38a5.36,5.36,0,0,0,1.72-.31A3.63,3.63,0,0,0,10.63,12,2.62,2.62,0,0,0,11.19,11a5.63,5.63,0,0,0,.16-1.44v-.7a14.35,14.35,0,0,0-1.53-.28,12.37,12.37,0,0,0-1.56-.1,3.84,3.84,0,0,0-2.47.67A2.34,2.34,0,0,0,5,11a2.35,2.35,0,0,0,.61,1.76A2.4,2.4,0,0,0,7.34,13.38Zm13.35,1.8a1,1,0,0,1-.64-.16,1.3,1.3,0,0,1-.35-.65L15.81,1.51a3,3,0,0,1-.15-.67.36.36,0,0,1,.41-.41H17.7a1,1,0,0,1,.65.16,1.4,1.4,0,0,1,.33.65l2.79,11,2.59-11A1.17,1.17,0,0,1,24.39.6a1.1,1.1,0,0,1,.67-.16H26.4a1.1,1.1,0,0,1,.67.16,1.17,1.17,0,0,1,.32.65L30,12.39,32.88,1.25A1.39,1.39,0,0,1,33.22.6a1,1,0,0,1,.65-.16h1.54a.36.36,0,0,1,.41.41,1.36,1.36,0,0,1,0,.26,3.64,3.64,0,0,1-.12.41l-4,12.86a1.3,1.3,0,0,1-.35.65,1,1,0,0,1-.64.16H29.25a1,1,0,0,1-.67-.17,1.26,1.26,0,0,1-.32-.67L25.67,3.64,23.11,14.34a1.26,1.26,0,0,1-.32.67,1,1,0,0,1-.67.17Zm21.36.44a11.28,11.28,0,0,1-2.56-.29,7.44,7.44,0,0,1-1.92-.67,1,1,0,0,1-.61-.93v-.84q0-.52.38-.52a.9.9,0,0,1,.31.06l.42.17a8.77,8.77,0,0,0,1.83.58,9.78,9.78,0,0,0,2,.2,4.48,4.48,0,0,0,2.43-.55,1.76,1.76,0,0,0,.86-1.57,1.61,1.61,0,0,0-.45-1.16A4.29,4.29,0,0,0,43,9.22l-2.41-.76A5.15,5.15,0,0,1,38,6.78a3.94,3.94,0,0,1-.83-2.41,3.7,3.7,0,0,1,.45-1.85,4.47,4.47,0,0,1,1.19-1.37A5.27,5.27,0,0,1,40.51.29,7.4,7.4,0,0,1,42.6,0a8.87,8.87,0,0,1,1.12.07q.57.07,1.08.19t.95.26a4.27,4.27,0,0,1,.7.29,1.59,1.59,0,0,1,.49.41.94.94,0,0,1,.15.55v.79q0,.52-.38.52a1.76,1.76,0,0,1-.64-.2,7.74,7.74,0,0,0-3.2-.64,4.37,4.37,0,0,0-2.21.47,1.6,1.6,0,0,0-.79,1.48,1.58,1.58,0,0,0,.49,1.18,4.94,4.94,0,0,0,1.83.92L44.55,7a5.08,5.08,0,0,1,2.57,1.6A3.76,3.76,0,0,1,47.9,11a4.21,4.21,0,0,1-.44,1.93,4.4,4.4,0,0,1-1.21,1.47,5.43,5.43,0,0,1-1.85.93A8.25,8.25,0,0,1,42.05,15.62Z"></path><path class="cls-2" d="M45.19,23.81C39.72,27.85,31.78,30,25,30A36.64,36.64,0,0,1,.22,20.57c-.51-.46-.06-1.09.56-.74A49.78,49.78,0,0,0,25.53,26.4,49.23,49.23,0,0,0,44.4,22.53C45.32,22.14,46.1,23.14,45.19,23.81Z"></path><path class="cls-2" d="M47.47,21.21c-.7-.9-4.63-.42-6.39-.21-.53.06-.62-.4-.14-.74,3.13-2.2,8.27-1.57,8.86-.83s-.16,5.89-3.09,8.35c-.45.38-.88.18-.68-.32C46.69,25.8,48.17,22.11,47.47,21.21Z"></path></svg>
+
+</a>
+
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="../../js/lunr.min.js?1725111350"></script>
+<script type="text/javascript" src="../../js/auto-complete.js?1725111350"></script>
+<script type="text/javascript">
+    
+        var baseurl = "\/\/vi";
+    
+</script>
+<script type="text/javascript" src="../../js/search.js?1725111350"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/1-introduce/" title="Giới thiệu" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../vi/1-introduce/">
+          <b>1. </b>Giới thiệu
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/2-github-actions/" title="CI/CD trên Github Actions" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../vi/2-github-actions/">
+          <b>2. </b>CI/CD trên Github Actions
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/3-ci-cd-a-sample-project_/" title="Thiết lập CI/CD cho project" class="dd-item 
+        
+        active
+        
+        ">
+      <a href="../../vi/3-ci-cd-a-sample-project_/">
+          <b>3. </b>Thiết lập CI/CD cho project
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+      <section id="shortcuts">
+        <h3>More</h3>
+        <ul>
+          
+              <li> 
+                  <a class="padding" href="https://www.facebook.com/groups/awsstudygroupfcj/"><i class='fab fa-facebook'></i> AWS Study Group</a>
+              </li>
+          
+        </ul>
+      </section>
+    
+
+    
+    <section id="prefooter">
+      <hr/>
+      <ul>
+      
+        <li>
+          <a class="padding">
+            <i class="fas fa-language fa-fw"></i>
+          <div class="select-style">
+            <select id="select-language" onchange="location = this.value;">
+          
+          
+          
+              
+              
+                  
+                    
+                    
+                      <option id="en" value="/3-ci-cd-a-sample-project_/">English</option>
+                    
+                  
+              
+                  
+              
+          
+              
+              
+                  
+              
+                  
+                    
+                    
+                      <option id="vi" value="/vi/3-ci-cd-a-sample-project_/" selected>Tiếng Việt</option>
+                    
+                  
+              
+          
+        </select>
+        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          width="255px" height="255px" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255;" xml:space="preserve">
+          <g>
+            <g id="arrow-drop-down">
+              <polygon points="0,63.75 127.5,191.25 255,63.75 		" />
+            </g>
+          </g>
+        </svg>
+        </div>
+        </a>
+        </li>
+      
+      
+      
+        <li><a class="padding" href="#" data-clear-history-toggle=""><i class="fas fa-history fa-fw"></i> Clear History</a></li>
+      
+      </ul>
+    </section>
+    
+    <section id="footer">
+      <left>
+    
+     <b> Workshop</b> <br>
+    <img src="https://hitwebcounter.com/counter/counter.php?page=7830891&style=0038&nbdigits=9&type=page&initCount=0" title="Migrate" Alt="web counter"   border="0" /></a>  <br>
+     <b> <a href="https://cloudjourney.awsstudygroup.com/">Cloud Journey</a></b> <br>
+    <img src="https://hitwebcounter.com/counter/counter.php?page=7830807&style=0038&nbdigits=9&type=page&initCount=0" title="Total CLoud Journey" Alt="web counter"   border="0"   />
+     
+</left>
+<left>
+    <br>
+    <br>
+        <b> Last Updated </b> <br>
+        <i><font color=orange>30-08-2024</font></i>
+    </left>
+    <left>
+        <br>
+        <br>
+            <b> Team </b> <br>
+           
+            <i>
+                <a href="https://www.linkedin.com/in/jotaguy"  style="color:orange">Gia Hưng</a>
+        </i>
+        </left>
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    </section>
+  </div>
+</nav>
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            <a href='../../vi/'>Mở đầu</a> > Thiết lập CI/CD cho project
+          
+        
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents"></nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
+        <div id="head-tags">
+        
+        </div>
+        
+        <div id="body-inner">
+          
+            <h1>
+              
+              Thiết lập CI/CD cho project
+            </h1>
+          
+
+        
+
+
+
+	<p>Trong phần này, chúng ta sẽ <strong>thiết lập một CI/CD pipeline cơ bản</strong> cho một dự án <strong>Next.js</strong> sử dụng <strong>GitHub Actions</strong>. Mục tiêu là làm quen với cách tự động hóa quy trình từ khi commit mã nguồn đến khi triển khai ứng dụng lên môi trường sản xuất. Qua đó, bạn sẽ hiểu được cách <strong>GitHub Actions</strong> có thể giúp tối ưu hóa và tự động hóa các bước phát triển và triển khai trong dự án của mình.</p>
+<p>Quy trình sẽ bao gồm các phần sau:</p>
+<ol>
+<li>
+<p>Chuẩn bị môi trường làm việc bằng cách clone dự án mẫu Next.js và cấu hình các dependencies cần thiết.</p>
+</li>
+<li>
+<p>Tùy chỉnh và kiểm tra Unit Tests để đảm bảo mã nguồn được kiểm tra đầy đủ trước khi triển khai.</p>
+</li>
+<li>
+<p>Thiết lập GitHub Actions để tự động hóa quá trình build và kiểm thử mỗi khi có thay đổi mã nguồn.</p>
+</li>
+<li>
+<p>Triển khai ứng dụng lên GitHub Pages, giúp chúng ta dễ dàng kiểm tra và sử dụng ứng dụng sau khi được cập nhật.</p>
+</li>
+</ol>
+<p>Với những phần này, bạn sẽ nắm rõ cách triển khai một quy trình CI/CD đơn giản nhưng hiệu quả cho dự án của mình.</p>
+<p><strong>Bước 1</strong>: Clone dự án mẫu NextJS về máy</p>
+<ul>
+<li>Link repository: <a href="https://github.com/vercel/next.js">https://github.com/vercel/next.js</a></li>
+</ul>
+<p><img alt="Clone project" src="../../images/cicd4project/1_clone_prj_nextjs.png?width=30pc"></p>
+<p><strong>Bước 2</strong>: Chọn folder examples/with-jest và mở trong terminal</p>
+<ul>
+<li>Đây là một dự án Next.js đã được cấu hình sẵn với các unit test.</li>
+</ul>
+<p><img alt="Open with-jest" src="../../images/cicd4project/2_with_jest.png?width=20pc"></p>
+<p><strong>Bước 3</strong>: Cài đặt npm dependencies</p>
+<ul>
+<li>Chạy lệnh <code>npm install</code> để cài đặt tất cả các dependencies cần thiết cho dự án.</li>
+</ul>
+<p><img alt="Install dependencies" src="../../images/cicd4project/3_npm_install.png?width=30pc"></p>
+<p><strong>Bước 4</strong>: Chạy project</p>
+<ul>
+<li>Sử dụng lệnh <code>npm run dev</code> để khởi động server phát triển của Next.js.</li>
+</ul>
+<p><img alt="Run project" src="../../images/cicd4project/4_run_project.png?width=30pc"></p>
+<p><strong>Bước 5</strong> Truy cập vào <strong>localhost:3000</strong> để xem ứng dụng đang chạy.</p>
+<p><img alt="Localhost 3000" src="../../images/cicd4project/5_localhost3000.png?width=30pc"></p>
+<p><strong>Bước 6</strong>: Chỉnh sửa file package.json</p>
+<ul>
+<li>Mở file package.json và thay đổi dòng &ldquo;test&rdquo;: &ldquo;jest &ndash;watch&rdquo; thành &ldquo;test&rdquo;: &ldquo;jest &ndash;coverage&rdquo; để xem tỷ lệ độ phủ của các unit test.</li>
+</ul>
+<p><img alt="Chỉnh sửa file package.json" src="../../images/cicd4project/6_packagejson_watch_coverages.png?width=30pc"></p>
+<p><strong>Bước 7</strong>: Chạy lệnh <code>npm run test</code> để thực hiện các bài kiểm thử.</p>
+<p><img alt="Chạy kiểm thử" src="../../images/cicd4project/7_npm_run_test.png?width=30pc"></p>
+<p><strong>Bước 8</strong>: Bảng báo cáo độ phủ của mã nguồn sẽ bao gồm các thông tin như:</p>
+<ul>
+<li>File: Danh sách các tệp tin đã được kiểm tra.</li>
+<li>% Stmts: Tỷ lệ phần trăm các câu lệnh (statements) đã được kiểm tra.</li>
+<li>% Branch: Tỷ lệ phần trăm các nhánh điều kiện (branches) trong mã đã được kiểm tra.</li>
+<li>% Funcs: Tỷ lệ phần trăm các hàm (functions) đã được kiểm tra.</li>
+<li>% Lines: Tỷ lệ phần trăm các dòng mã đã được kiểm tra.</li>
+<li>Uncovered Line #s: Các dòng mã chưa được kiểm tra.</li>
+</ul>
+<p><img alt="Bảng độ phủ" src="../../images/cicd4project/8_b%E1%BA%A3ng_b%C3%A1o_c%C3%A1o_%C4%91%E1%BB%99_ph%E1%BB%A7_m%C3%A3_ngu%E1%BB%93n.png?width=30pc"></p>
+<p><strong>Bước 9</strong>: Tuỳ chỉnh một số unit test</p>
+<ul>
+<li>Mở file app/blog/page.tsx.</li>
+<li>Thêm hoặc sửa đổi các unit test để bao quát thêm các chức năng hoặc kịch bản cần thiết.</li>
+</ul>
+<p><img alt="Tùy chỉnh unit test 1" src="../../images/cicd4project/9_custom_unit_test_1.png?width=30pc"></p>
+<p><strong>Bước 10</strong>: Tiếp tục với file app/blog/page.test.tsx</p>
+<ul>
+<li>Tiến hành sửa đổi trong file test app/blog/page.test.tsx để phù hợp với bất kỳ thay đổi nào đã thực hiện trong app/blog/page.tsx.</li>
+</ul>
+<p><img alt="Tùy chỉnh unit test 2" src="../../images/cicd4project/10_custom_unit_test_2.png?width=30pc"></p>
+<p><strong>Bước 11</strong>: Chạy lại bộ kiểm thử</p>
+<ul>
+<li>Chạy lệnh <code>npm run test</code> để kiểm tra các unit test.</li>
+<li>Đảm bảo rằng tất cả các unit test đều thành công và có thêm ít nhất một unit test mới được bao phủ.</li>
+</ul>
+<p><img alt="Chạy kiểm thử lại" src="../../images/cicd4project/11_npm_run_test_l%E1%BA%A1i.png?width=30pc"></p>
+<p><strong>Bước 12</strong>: Đẩy project lên GitHub</p>
+<ul>
+<li>Đảm bảo bạn đã commit tất cả các thay đổi trong Git và đẩy (push) lên repository GitHub của bạn.</li>
+</ul>
+<p><img alt="Đẩy project lên Github" src="../../images/cicd4project/12_%C4%91%E1%BA%A9y_project_l%C3%AAn_github.png?width=30pc"></p>
+<p><strong>Bước 13</strong>: Đẩy project lên GitHub thành công</p>
+<ul>
+<li>Xác nhận rằng project đã được đẩy lên GitHub thành công bằng cách kiểm tra repository của bạn.</li>
+</ul>
+<p><img alt="Đẩy thành công" src="../../images/cicd4project/13_%C4%91%E1%BA%A9y_th%C3%A0nh_c%C3%B4ng.png?width=30pc"></p>
+<p><strong>Bước 14</strong>: Trên repository, chọn Actions</p>
+<ul>
+<li>Truy cập vào tab Actions trên GitHub repository của bạn để cấu hình GitHub Actions.</li>
+</ul>
+<p><img alt="Chọn Actions" src="../../images/cicd4project/14_ch%E1%BB%8Dn_actions_tr%C3%AAn_repo.png?width=30pc"></p>
+<p><strong>Bước 15</strong>: Tìm NodeJS và chọn Configure NodeJS</p>
+<ul>
+<li>Tìm workflow NodeJS đã được cấu hình sẵn và chọn Configure NodeJS để chỉnh sửa hoặc thiết lập các bước tự động.</li>
+</ul>
+<p><img alt="Chọn NodeJs" src="../../images/cicd4project/15_ch%E1%BB%8Dn_node.js.png?width=30pc"></p>
+<p><strong>Bước 16</strong>: Giao diện Actions NodeJS</p>
+<ul>
+<li>Tại giao diện này, bạn có thể thêm, sửa hoặc xóa các bước cần thiết cho quy trình CI/CD của bạn.</li>
+</ul>
+<p><img alt="Actions NodeJs" src="../../images/cicd4project/16_giao_di%E1%BB%87n_actions_nodejs.png?width=30pc"></p>
+<p><strong>Bước 17</strong>: Chọn Commit Changes</p>
+<ul>
+<li>Sau khi chỉnh sửa xong, chọn Commit Changes để lưu lại các thay đổi trong workflow của bạn.</li>
+</ul>
+<p><img alt="Commit Changes" src="../../images/cicd4project/17_ch%E1%BB%8Dn_commit_changes.png?width=30pc"></p>
+<p><strong>Bước 18</strong>: Sau khi commit changes, trong repo sẽ có folder .github/workflows</p>
+<ul>
+<li>Folder này chứa các file .yml để làm việc với GitHub Actions, trong đó bạn có thể xem và chỉnh sửa các công việc CI/CD.</li>
+</ul>
+<p><img alt=".github/workflows" src="../../images/cicd4project/18_file_node_workflow_sau_khi_commit_changes.png?width=30pc"></p>
+<p><strong>Bước 19</strong>: Tạo và chuyển sang một branch khác: branch &ldquo;update&rdquo;</p>
+<ul>
+<li>
+<p>Tạo một branch mới tên là &ldquo;update&rdquo; và chuyển sang branch đó.</p>
+</li>
+<li>
+<p>Thêm một vài dòng code hoặc thực hiện thay đổi cần thiết.</p>
+</li>
+</ul>
+<p><img alt="switch update" src="../../images/cicd4project/19_sang_branch_update_thay_%C4%91%E1%BB%95i_code.png?width=30pc"></p>
+<p><strong>Bước 20</strong>: Đẩy code mới lên branch &ldquo;update&rdquo;</p>
+<ul>
+<li>Đẩy (push) các thay đổi lên branch &ldquo;update&rdquo; trên GitHub.</li>
+</ul>
+<p><img alt="git push" src="../../images/cicd4project/20_%C4%91%E1%BA%A9y_code_v%E1%BB%ABa_th%C3%AAm_l%C3%AAn_branch_update.png?width=30pc"></p>
+<p><strong>Bước 21</strong>: Chọn Compare &amp; Pull Request</p>
+<ul>
+<li>Trên GitHub, chọn Compare &amp; Pull Request để bắt đầu quá trình merge code từ branch &ldquo;update&rdquo; vào branch &ldquo;main&rdquo;.</li>
+</ul>
+<p><img alt="compare and pull request" src="../../images/cicd4project/21_ch%E1%BB%8Dn_compare_pull_request.png?width=30pc"></p>
+<p><strong>Bước 22</strong>: Tạo pull request vào branch main</p>
+<ul>
+<li>Điền thông tin cần thiết và tạo pull request để merge code vào branch chính (main).</li>
+</ul>
+<p><img alt="create pull request" src="../../images/cicd4project/22_Create_pull_request_v%C3%A0o_branch_main.png?width=30pc"></p>
+<p><strong>Bước 23</strong>: Hệ thống tự động chạy những công việc đã liệt kê trong file nodejs.yml</p>
+<ul>
+<li>Sau khi tạo pull request, GitHub Actions sẽ tự động chạy các công việc được cấu hình trong file nodejs.yml.</li>
+</ul>
+<p><img alt="automation work" src="../../images/cicd4project/23_T%E1%BB%B1_%C4%91%E1%BB%99ng_ch%E1%BA%A1y_nh%E1%BB%AFng_job.png?width=30pc"></p>
+<p><strong>Bước 24</strong>: Vào Actions để kiểm tra chi tiết các công việc đã hoàn thành</p>
+<ul>
+<li>Truy cập vào tab Actions để kiểm tra trạng thái và kết quả của các công việc CI/CD.</li>
+</ul>
+<p><img alt="check successfully" src="../../images/cicd4project/24_Ki%E1%BB%83m_tra_chi_ti%E1%BA%BFt_c%C3%A1c_c%C3%B4ng_vi%E1%BB%87c_%C4%91%C3%A3_ho%C3%A0n_th%C3%A0nh_trong_Actions.png?width=30pc"></p>
+<p><strong>Bước 25</strong>: Vào Settings chọn Pages để Deploy</p>
+<ul>
+<li>Vào mục Settings của repository, chọn Pages để cấu hình và triển khai ứng dụng của bạn.</li>
+</ul>
+<p><img alt="github pages" src="../../images/cicd4project/25_V%C3%A0o_Settings_ch%E1%BB%8Dn_Pages.png?width=30pc"></p>
+<p><strong>Bước 26</strong>: Trong phần Source, chọn GitHub Actions</p>
+<ul>
+<li>Trong phần cấu hình Source cho GitHub Pages, chọn GitHub Actions để sử dụng workflow đã thiết lập cho việc deploy.</li>
+</ul>
+<p><img alt="github actions" src="../../images/cicd4project/26_Source_ch%E1%BB%8Dn_Github_Actions.png?width=30pc"></p>
+<p><strong>Bước 27</strong>: Chọn Configure</p>
+<ul>
+<li>Chọn Configure để hoàn tất cấu hình deploy thông qua GitHub Actions.</li>
+</ul>
+<p><img alt="configure" src="../../images/cicd4project/27_Ch%E1%BB%8Dn_Configured_%C4%91%E1%BB%83_ti%E1%BA%BFp_t%E1%BB%A5c.png?width=30pc"></p>
+<p><strong>Bước 28</strong>: Chọn Commit Changes</p>
+<ul>
+<li>Sau khi cấu hình xong, chọn Commit Changes để lưu lại các thay đổi.</li>
+</ul>
+<p><img alt="commit changes 1" src="../../images/cicd4project/28_Ch%E1%BB%8Dn_Commit_changes.png?width=30pc"></p>
+<p><img alt="commit changes 2" src="../../images/cicd4project/28_Ch%E1%BB%8Dn_ti%E1%BA%BFp_Commit_changes2.png?width=30pc"></p>
+<p><strong>Bước 29</strong>: Merge Pull Request</p>
+<ul>
+<li>Sau khi các công việc kiểm thử và xây dựng trên GitHub Actions đã hoàn tất thành công, bạn cần merge pull request từ branch &ldquo;update&rdquo; vào branch &ldquo;main&rdquo;.</li>
+</ul>
+<p><img alt="merge pull request" src="../../images/cicd4project/29_Merge_pull_requests.png?width=30pc"></p>
+<p><strong>Bước 30</strong>: Merge</p>
+<p><img alt="merge" src="../../images/cicd4project/30_Ch%E1%BB%8Dn_Merge.png?width=30pc"></p>
+<p><strong>Bước 31</strong>: Tạo branch &ldquo;production&rdquo;</p>
+<ul>
+<li>Chọn New Branch trong mục Code, tạo một branch mới có tên là &ldquo;production&rdquo;</li>
+</ul>
+<p><img alt="production" src="../../images/cicd4project/31_T%E1%BA%A1o_branch_production.png?width=30pc"></p>
+<p><strong>Bước 32</strong>: Pull Request từ main đến production</p>
+<ul>
+<li>Tạo một pull request để merge các thay đổi từ branch &ldquo;main&rdquo; sang branch &ldquo;production&rdquo;.</li>
+<li>Truy cập vào repository của bạn trên GitHub, chọn Compare &amp; Pull Request từ branch &ldquo;main&rdquo; đến branch &ldquo;production&rdquo;.</li>
+</ul>
+<p><img alt="pull request" src="../../images/cicd4project/32_Pull_request_t%E1%BB%AB_main_%C4%91%E1%BA%BFn_production.png?width=30pc"></p>
+<p><strong>Bước 33</strong>: Thêm title &ldquo;release&rdquo; vào nội dung và chọn Create pull request</p>
+<p><img alt="create pull request" src="../../images/cicd4project/33_pull_request.png?width=30pc"></p>
+<p><strong>Bước 34</strong>: Thiết lập hệ thống CI/CD thành công</p>
+<ul>
+<li>Sau khi bạn đã tạo và merge pull request từ &ldquo;main&rdquo; sang &ldquo;production&rdquo;, hệ thống CI/CD (GitHub Actions) sẽ tự động chạy các công việc để triển khai (deploy) ứng dụng từ branch &ldquo;production&rdquo;.</li>
+<li>Kiểm tra các hoạt động này trong tab Actions để đảm bảo tất cả các bước đã được hoàn thành thành công và ứng dụng đã được triển khai lên môi trường production.</li>
+</ul>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+		
+			<a class="nav nav-prev" href="../../vi/2-github-actions/" title="CI/CD trên Github Actions"> <i class="fa fa-chevron-left"></i></a>
+		
+		
+			<a class="nav nav-next" href="../../vi/1-introduce/" title="Giới thiệu" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+	
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="../../js/clipboard.min.js?1725111350"></script>
+    <script src="../../js/perfect-scrollbar.min.js?1725111350"></script>
+    <script src="../../js/perfect-scrollbar.jquery.min.js?1725111350"></script>
+    <script src="../../js/jquery.sticky.js?1725111350"></script>
+    <script src="../../js/featherlight.min.js?1725111350"></script>
+    <script src="../../js/highlight.pack.js?1725111350"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="../../js/modernizr.custom-3.6.0.js?1725111350"></script>
+    <script src="../../js/learn.js?1725111350"></script>
+    <script src="../../js/hugo-learn.js?1725111350"></script>
+
+    <link href="../../mermaid/mermaid.css?1725111350" rel="stylesheet" />
+    <script src="../../mermaid/mermaid.js?1725111350"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-158079754-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
